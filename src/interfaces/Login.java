@@ -1,6 +1,8 @@
 
 package interfaces;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Omar
@@ -12,6 +14,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -48,6 +51,11 @@ public class Login extends javax.swing.JFrame {
 
         btnIniciarSesion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnIniciarSesion.setText("Iniciar sesión");
+        btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarSesionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -103,6 +111,27 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        String codigoAdmin = "admin";
+        String contrasenaAdmin = "admin";
+        
+        String codigoIngresado = txtCodigo.getText();
+        String contrasenaIngresada = new String (txtContrasena.getPassword()); //Convertimos a String lo contenido en el JPassword
+        
+        if ( (codigoIngresado.equals(codigoAdmin) ) && (contrasenaIngresada.equals(contrasenaAdmin)) ){
+            //Los Strings (y los demas objetos) en Java se comparan entre ellos con el metodo equals.
+            
+            Administrador ventanaAdmin = new Administrador();
+            ventanaAdmin.setVisible(true);
+            ventanaAdmin.setLocationRelativeTo(null); //Centrar ventana
+            dispose(); //Para que el Login se cierre   
+        }
+        else{
+           JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+        }
+        
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
