@@ -4,17 +4,21 @@
  */
 package interfaces;
 
+import archivo.ArchivoBinarioInvestigador;
+
 /**
  *
  * @author Omar
  */
 public class EliminarInvestigador extends javax.swing.JFrame {
-
+    Administrador ventanaAdmin;
     /**
      * Creates new form EliminarInvestigador
      */
-    public EliminarInvestigador() {
+    public EliminarInvestigador(Administrador ventanaAdmin) {
+        this.ventanaAdmin = ventanaAdmin;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -31,7 +35,7 @@ public class EliminarInvestigador extends javax.swing.JFrame {
         txtCodigoEliminarInvestigador = new javax.swing.JTextField();
         btnEliminarInvestigador = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -43,6 +47,11 @@ public class EliminarInvestigador extends javax.swing.JFrame {
 
         btnEliminarInvestigador.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         btnEliminarInvestigador.setText("Eliminar");
+        btnEliminarInvestigador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarInvestigadorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,40 +87,22 @@ public class EliminarInvestigador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEliminarInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInvestigadorActionPerformed
+        //Instanciamos nuestro manejador de archivos binarios de investigadores
+        ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador();
+        //Validamos que el campo de texto esté vacío
+        if(txtCodigoEliminarInvestigador.getText().length() != 0) {
+            //Lamamos al procedimiento eliminarContenido definido en el binario y le enviamos el código ingresdo en el campo de texto
+            archivo.eliminarContenido("investigadores.bin", txtCodigoEliminarInvestigador.getText());
+            this.ventanaAdmin.actualizarTabla();
+            txtCodigoEliminarInvestigador.setText("");
+        }
+    }//GEN-LAST:event_btnEliminarInvestigadorActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EliminarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EliminarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EliminarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EliminarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EliminarInvestigador().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminarInvestigador;

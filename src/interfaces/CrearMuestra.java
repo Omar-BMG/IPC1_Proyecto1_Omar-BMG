@@ -1,20 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
+
+import archivo.ArchivoBinarioMuestra;
+import archivo.ManejoArchivotxtPlanoPatronMuestra;
+import ipc_quimik.Muestra;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Omar
  */
 public class CrearMuestra extends javax.swing.JFrame {
-
+    
+    Administrador ventanaAdmin;
+    String filePath; //En esta variable guardaremos la ruta del archivo CSV del botón "Cargar Patrón"
     /**
      * Creates new form CrearMuestra
      */
-    public CrearMuestra() {
+    public CrearMuestra(Administrador ventanaAdmin) {
         initComponents();
+        filePath = "";
+        this.ventanaAdmin = ventanaAdmin;
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -35,7 +44,7 @@ public class CrearMuestra extends javax.swing.JFrame {
         btnCargarPatron = new javax.swing.JButton();
         btnCrearMuestra = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Crear Muestra");
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
@@ -53,9 +62,19 @@ public class CrearMuestra extends javax.swing.JFrame {
 
         btnCargarPatron.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
         btnCargarPatron.setText("Cargar Patrón");
+        btnCargarPatron.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarPatronActionPerformed(evt);
+            }
+        });
 
         btnCrearMuestra.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         btnCrearMuestra.setText("Crear");
+        btnCrearMuestra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearMuestraActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,40 +127,72 @@ public class CrearMuestra extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Este botón asignará la ruta del archivo donde está el patrón de la muestra, en la variable "filePath"
+    private void btnCargarPatronActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPatronActionPerformed
+        //Con el "JFileChooser" le damos la orden que se abra la ventana del archivo
+        JFileChooser fileChooser = new JFileChooser();
+        int seleccion = fileChooser.showOpenDialog(this); //Con "showOpenDialog" Aparece un cuadro de diálogo de selección de archivos "cargar archivo".
+        
+        //Condición
+        if(seleccion == JFileChooser.APPROVE_OPTION) {//Comparamos las acciones almacenadas en la variable selección, y sólo si escojió un arhivo ejecuta las siguientes instrucciones:
+            filePath = fileChooser.getSelectedFile().getAbsolutePath(); //Para obtener el Path, definimos de tipo string la variable "filePath"
+            System.out.println("La ruta del archivo es: " + filePath);
+        }
+        
+    }//GEN-LAST:event_btnCargarPatronActionPerformed
+
+    private void btnCrearMuestraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearMuestraActionPerformed
+        String rutaPatronMuestra = "";
+        rutaPatronMuestra = ("Muestra_"+txtCodigoCrearMuestra.getText()+".html");
+        //Instanciamos nuestro manejador de archivos Binarios y con el metodo agregarContenido almacenamos el objeto de tipo Muestra.
+        ArchivoBinarioMuestra archivo = new ArchivoBinarioMuestra();
+        //Primero Guardamos en un ArrayList las muestras en caso un archivo binario ya exista
+        ArrayList<Muestra> muestras = archivo.obtenerContenido("muestras.bin");
+        //Validamos que no hayan campos de texto vacíos y que el código no exista ya
+        ManejoArchivotxtPlanoPatronMuestra archivoCSV = new ManejoArchivotxtPlanoPatronMuestra();
+        if((txtCodigoCrearMuestra.getText().length() != 0) && (txtDescripcionCrearMuestra.getText().length() != 0)) {
+            if(muestras.size()== 0) {
+                guardarNuevaMuestra(archivo); //Si no hay investigadores, simplemente guardamos la nueva muestra
+                archivoCSV.crearArchivo(rutaPatronMuestra);
+                archivoCSV.leerCSVpatron(filePath, rutaPatronMuestra);
+            }
+            else{ //Si existen muestras debemos recorrer el arreglo para validar que el código sea único
+                boolean codigoExiste = false;
+                for (Muestra muest : muestras) {
+                    if(muest.getCodigo().equals(txtCodigoCrearMuestra.getText())){
+                       codigoExiste = true; 
+                    }
+                }
+                if(codigoExiste) {
+                    JOptionPane.showMessageDialog(this, "El código ya existe");
+                }
+                else{
+                    guardarNuevaMuestra(archivo);
+                    archivoCSV.crearArchivo(rutaPatronMuestra);
+                    archivoCSV.leerCSVpatron(filePath, rutaPatronMuestra);
+                }
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Falta información");
+        }
+    }//GEN-LAST:event_btnCrearMuestraActionPerformed
+    
+    //Procedimiento que guarda la nueva Muestra en el archivo Binario recibiendo el archivo instanciado previamente
+    private void guardarNuevaMuestra(ArchivoBinarioMuestra archivo){
+        archivo.agregarContenido("muestras.bin", new Muestra(txtCodigoCrearMuestra.getText(),txtDescripcionCrearMuestra.getText(), "Ingreso"));
+
+        //Ahora limpiamos los campos de texto:
+        txtCodigoCrearMuestra.setText("");
+        txtDescripcionCrearMuestra.setText("");
+        this.ventanaAdmin.actualizarTablaMuestras(); //Actualizamos la tabla de muestras en la ventana administrador 
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CrearMuestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CrearMuestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CrearMuestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CrearMuestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CrearMuestra().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCargarPatron;

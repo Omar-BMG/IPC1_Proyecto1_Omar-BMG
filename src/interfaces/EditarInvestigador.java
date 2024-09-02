@@ -4,17 +4,26 @@
  */
 package interfaces;
 
+import archivo.ArchivoBinarioInvestigador;
+import ipc_quimik.Investigador;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Omar
  */
 public class EditarInvestigador extends javax.swing.JFrame {
-
+        
+        Administrador ventanaAdmin;
+    
     /**
      * Creates new form CrearInvestigador
      */
-    public EditarInvestigador() {
+    public EditarInvestigador(Administrador ventanaAdmin) {
+        this.ventanaAdmin = ventanaAdmin;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -34,11 +43,11 @@ public class EditarInvestigador extends javax.swing.JFrame {
         txtCodigoEditarInvestigador = new javax.swing.JTextField();
         txtNombreEditarInvestigador = new javax.swing.JTextField();
         txtGeneroEditarInvestigador = new javax.swing.JTextField();
-        txtContraseñaEditarInvestigador = new javax.swing.JTextField();
+        txtContraseniaEditarInvestigador = new javax.swing.JTextField();
         btnActualizarInvestigador = new javax.swing.JButton();
         btnBuscarInvestigador = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Actualizar Investigador");
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 23)); // NOI18N
@@ -63,9 +72,19 @@ public class EditarInvestigador extends javax.swing.JFrame {
 
         btnActualizarInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         btnActualizarInvestigador.setText("Actualizar");
+        btnActualizarInvestigador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarInvestigadorActionPerformed(evt);
+            }
+        });
 
         btnBuscarInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBuscarInvestigador.setText("Buscar");
+        btnBuscarInvestigador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarInvestigadorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,7 +99,7 @@ public class EditarInvestigador extends javax.swing.JFrame {
                         .addGap(17, 17, 17)
                         .addComponent(labelContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtContraseñaEditarInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtContraseniaEditarInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addComponent(labelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -125,7 +144,7 @@ public class EditarInvestigador extends javax.swing.JFrame {
                     .addComponent(labelGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtContraseñaEditarInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContraseniaEditarInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnActualizarInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -135,41 +154,63 @@ public class EditarInvestigador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBuscarInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarInvestigadorActionPerformed
+        ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador ();
+        ArrayList<Investigador> listaInvestigadores = archivo.obtenerContenido("investigadores.bin");
+        
+        //Recorremos el arrayList Obtenido con los investigadores para buscar la coincidencia con el código ingresado
+        for (Investigador investigador : listaInvestigadores) {
+            //Si el código del investigador es igual al ingresado, en cada campo va a setear sus datos
+            if (investigador.getCodigo().equals(txtCodigoEditarInvestigador.getText())) {
+                txtNombreEditarInvestigador.setText(investigador.getNombre());
+                txtGeneroEditarInvestigador.setText(investigador.getGenero());
+                txtContraseniaEditarInvestigador.setText(investigador.getContrasenia());
+            }
+        }
+        //Si alguno de los campos está vacío luego de la búsqueda es porque el código ingresado no es válido.
+        if(txtNombreEditarInvestigador.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Código no válido");
+        }
+    }//GEN-LAST:event_btnBuscarInvestigadorActionPerformed
+
+    private void btnActualizarInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarInvestigadorActionPerformed
+        //instanciar el binario y llamar al procedimiento modificarContenido
+        ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador();
+        //Validamos que no hayan campos vacíos
+            if((txtNombreEditarInvestigador.getText().length() != 0) && (txtGeneroEditarInvestigador.getText().length() != 0) && (txtContraseniaEditarInvestigador.getText().length() != 0)) {
+            archivo.modificarContenido("Investigadores.bin", txtCodigoEditarInvestigador.getText(), new Investigador(txtCodigoEditarInvestigador.getText(), txtNombreEditarInvestigador.getText(), txtGeneroEditarInvestigador.getText(), txtContraseniaEditarInvestigador.getText(), obtenerCantExp(archivo, txtCodigoEditarInvestigador.getText())));
+            
+            JOptionPane.showMessageDialog(this, "El investigador fue modificado correctamente");
+            txtCodigoEditarInvestigador.setText("");
+            txtNombreEditarInvestigador.setText("");
+            txtGeneroEditarInvestigador.setText("");
+            txtContraseniaEditarInvestigador.setText("");
+            this.ventanaAdmin.actualizarTabla();
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Falta información");
+            }
+    }//GEN-LAST:event_btnActualizarInvestigadorActionPerformed
+
+    //Creamos función para retornar el número de experimentos de cada Investigador almacenado en el binario
+    //Esta funcion es usada para enviarle al constructor del investigador instanciado en el método "modificarContenido" del archivo binario, el número de experimentos que ya tenía el investigador.
+    private int obtenerCantExp (ArchivoBinarioInvestigador archivo, String codigo) {
+        int cantidadExperimentos = 0; //Declaramos la variable que retornaremos con el número de investigadores
+        //Declaramos un arraylist para guardar lo que tiene el binario, para ello previamente solicitamos por parámetro el binario.
+        ArrayList<Investigador> lista_investigadores = archivo.obtenerContenido("investigadores.bin");
+        //Recorremos la lista de investigadores y almacenamos la cantidad de experimentos del investigador deseado
+        for (Investigador invest : lista_investigadores){
+            if(invest.getCodigo().equals(codigo))
+                cantidadExperimentos = invest.getExperimentos();
+        }
+        //retornamos la cantidad de experimentos del Investigador
+        return cantidadExperimentos;
+    }
+    
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditarInvestigador().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizarInvestigador;
@@ -180,7 +221,7 @@ public class EditarInvestigador extends javax.swing.JFrame {
     private javax.swing.JLabel labelNombre;
     private javax.swing.JLabel labelTitulo;
     private javax.swing.JTextField txtCodigoEditarInvestigador;
-    private javax.swing.JTextField txtContraseñaEditarInvestigador;
+    private javax.swing.JTextField txtContraseniaEditarInvestigador;
     private javax.swing.JTextField txtGeneroEditarInvestigador;
     private javax.swing.JTextField txtNombreEditarInvestigador;
     // End of variables declaration//GEN-END:variables

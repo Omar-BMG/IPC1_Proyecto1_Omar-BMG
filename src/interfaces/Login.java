@@ -124,7 +124,6 @@ public class Login extends javax.swing.JFrame {
             
             Administrador ventanaAdmin = new Administrador();
             ventanaAdmin.setVisible(true);
-            ventanaAdmin.setLocationRelativeTo(null); //Centrar ventana
             dispose(); //Para que el Login se cierre   
         }
         else{

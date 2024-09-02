@@ -1,22 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
+
+import archivo.ArchivoBinarioInvestigador;
+import ipc_quimik.Investigador;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Omar
  */
 public class CrearInvestigador extends javax.swing.JFrame {
-
+    
+    Administrador ventanaAdmin; //Definimos una ventana administrador
+    
     /**
      * Creates new form CrearInvestigador
      */
     public CrearInvestigador() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
+    public CrearInvestigador(Administrador ventanaAdmin){
+        this.ventanaAdmin = ventanaAdmin; //Inicializamos la ventana administrador 
+        initComponents();
+        setLocationRelativeTo(null);
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,13 +42,13 @@ public class CrearInvestigador extends javax.swing.JFrame {
         labelNombre = new javax.swing.JLabel();
         labelGenero = new javax.swing.JLabel();
         labelContrasena = new javax.swing.JLabel();
-        txtCodigoCrearInvestigador = new javax.swing.JTextField();
-        txtNombreCrearInvestigador = new javax.swing.JTextField();
-        txtGeneroCrearInvestigador = new javax.swing.JTextField();
-        txtContraseñaCrearInvestigador = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtGenero = new javax.swing.JTextField();
+        txtContrasenia = new javax.swing.JTextField();
         btnCrearInvestigador = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Crear Investigador");
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
@@ -62,6 +73,11 @@ public class CrearInvestigador extends javax.swing.JFrame {
 
         btnCrearInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         btnCrearInvestigador.setText("Crear");
+        btnCrearInvestigador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearInvestigadorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -74,7 +90,7 @@ public class CrearInvestigador extends javax.swing.JFrame {
                             .addGap(17, 17, 17)
                             .addComponent(labelCódigo, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtCodigoCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(35, 35, 35)
                             .addComponent(labelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -82,17 +98,17 @@ public class CrearInvestigador extends javax.swing.JFrame {
                             .addGap(17, 17, 17)
                             .addComponent(labelContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtContraseñaCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(17, 17, 17)
                             .addComponent(labelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtNombreCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(17, 17, 17)
                             .addComponent(labelGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtGeneroCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addComponent(btnCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -106,18 +122,18 @@ public class CrearInvestigador extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelCódigo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCodigoCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombreCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtGeneroCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtContraseñaCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearInvestigador, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -127,6 +143,49 @@ public class CrearInvestigador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCrearInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearInvestigadorActionPerformed
+        //Instanciamos nuestr manejador de archivos Binarios y con el metodo agregarContenido almacenamos el objeto de tipo Investigador.
+        ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador();
+        //Primero Guardamos en un ArrayList los investigadores en caso un archivo binario ya exista
+        ArrayList<Investigador> investigadores = archivo.obtenerContenido("investigadores.bin");
+        //Validamos que no hayan campos de texto vacíos y que el código no exista ya
+        if((txtCodigo.getText().length() != 0) && (txtNombre.getText().length() != 0) && (txtGenero.getText().length() != 0) && (txtContrasenia.getText().length() != 0)) {
+            if(investigadores.size()== 0) {
+                guardarNuevoInvestigador(archivo); //Si no hay investigadores, simplemente guardamos el nuevo
+            }
+            else{ //Si existen investigadores debemos recorrer el arreglo para validar que el código sea único
+                boolean codigoExiste = false;
+                for (Investigador invest : investigadores) {
+                    if(invest.getCodigo().equals(txtCodigo.getText())){
+                       codigoExiste = true; 
+                    }
+                }
+                if(codigoExiste) {
+                    JOptionPane.showMessageDialog(this, "El código ya existe");
+                }
+                else{
+                    guardarNuevoInvestigador(archivo);
+                }
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Falta información");
+        }
+        
+    }//GEN-LAST:event_btnCrearInvestigadorActionPerformed
+
+    //Procedimiento que guarda al nuevo Inestigador en el archivo Binario recibiendo el archivo instanciado previamente
+    private void guardarNuevoInvestigador(ArchivoBinarioInvestigador archivo){
+        archivo.agregarContenido("Investigadores.bin", new Investigador(txtCodigo.getText(),txtNombre.getText(),txtGenero.getText(),txtContrasenia.getText(), 0));
+
+        //Ahora limpiamos los campos de texto:
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtGenero.setText("");
+        txtContrasenia.setText("");
+        this.ventanaAdmin.actualizarTabla(); //Actualizamos la tabla en la ventana administrador 
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -169,9 +228,9 @@ public class CrearInvestigador extends javax.swing.JFrame {
     private javax.swing.JLabel labelGenero;
     private javax.swing.JLabel labelNombre;
     private javax.swing.JLabel labelTitulo;
-    private javax.swing.JTextField txtCodigoCrearInvestigador;
-    private javax.swing.JTextField txtContraseñaCrearInvestigador;
-    private javax.swing.JTextField txtGeneroCrearInvestigador;
-    private javax.swing.JTextField txtNombreCrearInvestigador;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtContrasenia;
+    private javax.swing.JTextField txtGenero;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
