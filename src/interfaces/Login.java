@@ -1,6 +1,9 @@
 
 package interfaces;
 
+import archivo.ArchivoBinarioInvestigador;
+import ipc_quimik.Investigador;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -113,8 +116,13 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        //Inicializando el admin
         String codigoAdmin = "admin";
         String contrasenaAdmin = "admin";
+        
+        //Inicializando a los investigadores
+        ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador();
+        ArrayList<Investigador> listaInvestigadores = archivo.obtenerContenido("investigadores.bin"); //Guardamos en un ArayList los investigadores actuales
         
         String codigoIngresado = txtCodigo.getText();
         String contrasenaIngresada = new String (txtContrasena.getPassword()); //Convertimos a String lo contenido en el JPassword
@@ -125,10 +133,19 @@ public class Login extends javax.swing.JFrame {
             Administrador ventanaAdmin = new Administrador();
             ventanaAdmin.setVisible(true);
             dispose(); //Para que el Login se cierre   
+        } else if(listaInvestigadores.size()==0){
+            JOptionPane.showMessageDialog(this, "Usuario y contraseña incorrectos");
+        } else{
+            //Recorremos la lista de investigadores buscando la coincidencia
+            for(Investigador invest: listaInvestigadores){
+               if((invest.getCodigo().equals(codigoIngresado))&&(invest.getContrasenia().equals(contrasenaIngresada))){
+                   ventanaInvestigador nuevaVentanaInvestigador = new ventanaInvestigador();
+                   nuevaVentanaInvestigador.setVisible(true);
+                   dispose(); //Para cerrar el Login
+               } 
+            }
         }
-        else{
-           JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
-        }
+        
         
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 

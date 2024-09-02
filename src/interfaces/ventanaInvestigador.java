@@ -15,6 +15,7 @@ public class ventanaInvestigador extends javax.swing.JFrame {
      */
     public ventanaInvestigador() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
