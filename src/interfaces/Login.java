@@ -3,8 +3,12 @@ package interfaces;
 
 import archivo.ArchivoBinarioInvestigador;
 import ipc_quimik.Investigador;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -29,7 +33,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new FondoPanel();
         lblTitulo = new javax.swing.JLabel();
         lblCodigo = new javax.swing.JLabel();
         lblContrasena = new javax.swing.JLabel();
@@ -39,20 +43,31 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login - IPC Quimik");
+        setResizable(false);
 
-        lblTitulo.setFont(new java.awt.Font("Snap ITC", 1, 36)); // NOI18N
+        lblTitulo.setBackground(new java.awt.Color(51, 51, 51));
+        lblTitulo.setFont(new java.awt.Font("Snap ITC", 1, 40)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitulo.setText("IPC Quimik");
 
         lblCodigo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblCodigo.setForeground(new java.awt.Color(255, 255, 255));
         lblCodigo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCodigo.setText("Código");
 
         lblContrasena.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblContrasena.setForeground(new java.awt.Color(255, 255, 255));
         lblContrasena.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblContrasena.setText("Contraseña");
 
-        btnIniciarSesion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtContrasena.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+
+        txtCodigo.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+
+        btnIniciarSesion.setBackground(new java.awt.Color(102, 102, 102));
+        btnIniciarSesion.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnIniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
         btnIniciarSesion.setText("Iniciar sesión");
         btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,38 +82,41 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(129, 129, 129)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtContrasena)
-                                    .addComponent(txtCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))))))
-                .addContainerGap(110, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(lblContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(174, 174, 174)
+                        .addComponent(btnIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                    .addComponent(txtCodigo))
+                .addComponent(lblContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(btnIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -116,6 +134,8 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        boolean usuarioEncontrado = false;
+        Investigador usuarioInvestigador = new Investigador(); //Variable donde almacenaremos el investigador que iniciará sesión
         //Inicializando el admin
         String codigoAdmin = "admin";
         String contrasenaAdmin = "admin";
@@ -134,56 +154,29 @@ public class Login extends javax.swing.JFrame {
             ventanaAdmin.setVisible(true);
             dispose(); //Para que el Login se cierre   
         } else if(listaInvestigadores.size()==0){
-            JOptionPane.showMessageDialog(this, "Usuario y contraseña incorrectos");
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
         } else{
             //Recorremos la lista de investigadores buscando la coincidencia
             for(Investigador invest: listaInvestigadores){
                if((invest.getCodigo().equals(codigoIngresado))&&(invest.getContrasenia().equals(contrasenaIngresada))){
-                   ventanaInvestigador nuevaVentanaInvestigador = new ventanaInvestigador();
-                   nuevaVentanaInvestigador.setVisible(true);
-                   dispose(); //Para cerrar el Login
+                   usuarioEncontrado = true;
+                   //Ahora almacenamos al investigador que inició sesión para enviárselo al constructor de la ventana Investigador.
+                   usuarioInvestigador = new Investigador(invest.getCodigo(), invest.getNombre(), invest.getGenero(), invest.getContrasenia(), invest.getExperimentos());
                } 
+            }
+            if(usuarioEncontrado){
+                ventanaInvestigador nuevaVentanaInvestigador = new ventanaInvestigador(usuarioInvestigador);
+                nuevaVentanaInvestigador.setVisible(true); //Instanciamos y ponemos visible la ventana Investigador
+                dispose(); //Ocultamos el login
+            } else{
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
             }
         }
         
         
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-                
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIniciarSesion;
@@ -194,4 +187,20 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JPasswordField txtContrasena;
     // End of variables declaration//GEN-END:variables
+
+    //Clase interna que nos servirá para dibujar imagenes en el fondo 
+    class FondoPanel extends JPanel {
+        private Image imagen;
+        
+        @Override
+        public void paint(Graphics g) {
+            imagen = new ImageIcon(getClass().getResource("/imagenes/FondoLogin.jpg")).getImage();
+            
+            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this); //Dibujamos la imagen
+            
+            setOpaque(false); //Evita que dibuje el fondo por defecto que tiene el panel
+            super.paint(g); //Dibuja los componentes por encima de la imagen para que no se pierdan
+        }
+    }
+    
 }

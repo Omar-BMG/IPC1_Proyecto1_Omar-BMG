@@ -1,22 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
+
+import archivo.ArchivoBinarioPatron;
+import java.awt.Color;
+import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Omar
  */
 public class EliminarPatron extends javax.swing.JFrame {
-
+    Administrador menuAdmin;
     /**
      * Creates new form EliminarPatron
      */
-    public EliminarPatron() {
+    public EliminarPatron(Administrador menuAdmin) {
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
+        this.menuAdmin = menuAdmin;
+        setLocationRelativeTo(null);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,19 +36,29 @@ public class EliminarPatron extends javax.swing.JFrame {
         txtCodigoEliminarPatron = new javax.swing.JTextField();
         btnEliminarPatron = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Eliminar Patrón");
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Eliminar Patrón");
 
         labelCodigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCodigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCodigo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelCodigo.setText("Código:");
 
+        btnEliminarPatron.setBackground(new java.awt.Color(153, 153, 153));
         btnEliminarPatron.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnEliminarPatron.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarPatron.setText("Eliminar");
+        btnEliminarPatron.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPatronActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,41 +95,35 @@ public class EliminarPatron extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EliminarPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EliminarPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EliminarPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EliminarPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    
+    private void btnEliminarPatronActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPatronActionPerformed
+        //Instanciamos nuestro manejador de archivos binarios de patrones
+        ArchivoBinarioPatron archivo = new ArchivoBinarioPatron();
+        //Definimos la ruta del archivo del patrón
+        String filePath = ("Patrón_"+txtCodigoEliminarPatron.getText()+".html");
+        //Validamos que el campo de texto no esté vacío
+        if(txtCodigoEliminarPatron.getText().length() != 0) {
+            //Lamamos al procedimiento eliminarContenido definido en el binario y le enviamos el código ingresdo en el campo de texto
+            archivo.eliminarContenido("patrones.bin", txtCodigoEliminarPatron.getText());
+            eliminarArchivoPatron(filePath); //También eliminamos el archivo html asociado
+            this.menuAdmin.actualizarTablaPatrones();
+            txtCodigoEliminarPatron.setText("");
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EliminarPatron().setVisible(true);
+    }//GEN-LAST:event_btnEliminarPatronActionPerformed
+    
+    private void eliminarArchivoPatron(String filePath) {
+        try{
+            File archivo = new File(filePath); //Instanciamos el archivo enviandole al constructor la dirección deseada
+            if(archivo.delete()){ //El .delete nos devuelve un booleano en caso se elimine el archivo deseado
+                JOptionPane.showMessageDialog(this, "Patrón eliminado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el archivo");
             }
-        });
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+        }
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminarPatron;

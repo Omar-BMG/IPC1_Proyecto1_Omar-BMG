@@ -7,17 +7,19 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
 /**
  *
  * @author Omar
  */
-
-public class RenderBotonVerInvestigador extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener{
+public class RenderBotonVerPatron extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener{
     private JButton button;
     private int fila;
     private JTable table;
 
-    public RenderBotonVerInvestigador() {
+    public RenderBotonVerPatron() {
         button = new JButton();
         button.setText("Ver");
         button.addActionListener(this);
@@ -44,11 +46,15 @@ public class RenderBotonVerInvestigador extends AbstractCellEditor implements Ta
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Obtenemos el valor de una columna específica (por ejemplo, la columna 1)
-        int columnaEspecifica = 1; // Cambia este valor a la columna que necesites
-        Object valor = table.getValueAt(fila, columnaEspecifica); // Obtener el valor de la columna específica
-        System.out.println("Botón en la fila " + fila + " presionado. Valor de la columna " + columnaEspecifica + ": " + valor);
-        // Detener la edición
-        fireEditingStopped();
+        try {
+            int columnaEspecifica = 0; //Obtendremos el valor de la columna 0, que es el código del patrón
+            Object valor = table.getValueAt(fila, columnaEspecifica); //Obtenemos el valor del código
+            String rutaPatron = ("Patrón_"+valor+".html"); //En la variable rutaPatron guardamos la dirección de los patrones
+            
+            Desktop.getDesktop().open(new File(rutaPatron));
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+        fireEditingStopped(); //Detenemos la edición
     } 
 }

@@ -2,8 +2,9 @@
 package interfaces;
 
 import archivo.ArchivoBinarioMuestra;
-import archivo.ManejoArchivotxtPlanoPatronMuestra;
+import archivo.ManejoArchivotxtPlanoPatron;
 import ipc_quimik.Muestra;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -21,6 +22,7 @@ public class CrearMuestra extends javax.swing.JFrame {
      */
     public CrearMuestra(Administrador ventanaAdmin) {
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
         filePath = "";
         this.ventanaAdmin = ventanaAdmin;
         setLocationRelativeTo(null);
@@ -46,21 +48,28 @@ public class CrearMuestra extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Crear Muestra");
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Crear Muestra");
 
         labelCodigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCodigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCodigo.setText("Código:");
 
         labelDescripcion.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        labelDescripcion.setForeground(new java.awt.Color(255, 255, 255));
         labelDescripcion.setText("Descripción:");
 
         labelPatron.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelPatron.setForeground(new java.awt.Color(255, 255, 255));
         labelPatron.setText("Patrón:");
 
+        btnCargarPatron.setBackground(new java.awt.Color(153, 153, 153));
         btnCargarPatron.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        btnCargarPatron.setForeground(new java.awt.Color(255, 255, 255));
         btnCargarPatron.setText("Cargar Patrón");
         btnCargarPatron.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -68,7 +77,9 @@ public class CrearMuestra extends javax.swing.JFrame {
             }
         });
 
+        btnCrearMuestra.setBackground(new java.awt.Color(153, 153, 153));
         btnCrearMuestra.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        btnCrearMuestra.setForeground(new java.awt.Color(255, 255, 255));
         btnCrearMuestra.setText("Crear");
         btnCrearMuestra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -136,9 +147,7 @@ public class CrearMuestra extends javax.swing.JFrame {
         //Condición
         if(seleccion == JFileChooser.APPROVE_OPTION) {//Comparamos las acciones almacenadas en la variable selección, y sólo si escojió un arhivo ejecuta las siguientes instrucciones:
             filePath = fileChooser.getSelectedFile().getAbsolutePath(); //Para obtener el Path, definimos de tipo string la variable "filePath"
-            System.out.println("La ruta del archivo es: " + filePath);
-        }
-        
+        }    
     }//GEN-LAST:event_btnCargarPatronActionPerformed
 
     private void btnCrearMuestraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearMuestraActionPerformed
@@ -149,7 +158,7 @@ public class CrearMuestra extends javax.swing.JFrame {
         //Primero Guardamos en un ArrayList las muestras en caso un archivo binario ya exista
         ArrayList<Muestra> muestras = archivo.obtenerContenido("muestras.bin");
         //Validamos que no hayan campos de texto vacíos y que el código no exista ya
-        ManejoArchivotxtPlanoPatronMuestra archivoCSV = new ManejoArchivotxtPlanoPatronMuestra();
+        ManejoArchivotxtPlanoPatron archivoCSV = new ManejoArchivotxtPlanoPatron();
         if((txtCodigoCrearMuestra.getText().length() != 0) && (txtDescripcionCrearMuestra.getText().length() != 0)) {
             if(muestras.size()== 0) {
                 guardarNuevaMuestra(archivo); //Si no hay investigadores, simplemente guardamos la nueva muestra

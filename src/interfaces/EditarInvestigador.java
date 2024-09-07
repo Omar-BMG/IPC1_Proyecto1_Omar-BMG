@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
 
 import archivo.ArchivoBinarioInvestigador;
 import ipc_quimik.Investigador;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -23,6 +21,7 @@ public class EditarInvestigador extends javax.swing.JFrame {
     public EditarInvestigador(Administrador ventanaAdmin) {
         this.ventanaAdmin = ventanaAdmin;
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
         setLocationRelativeTo(null);
     }
 
@@ -49,28 +48,36 @@ public class EditarInvestigador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Actualizar Investigador");
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 23)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Editar Investigador");
 
         labelCódigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCódigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCódigo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelCódigo.setText("Código:");
 
         labelNombre.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelNombre.setForeground(new java.awt.Color(255, 255, 255));
         labelNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelNombre.setText("Nombre:");
 
         labelGenero.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelGenero.setForeground(new java.awt.Color(255, 255, 255));
         labelGenero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelGenero.setText("Género:");
 
         labelContrasena.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelContrasena.setForeground(new java.awt.Color(255, 255, 255));
         labelContrasena.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelContrasena.setText("Contraseña:");
 
+        btnActualizarInvestigador.setBackground(new java.awt.Color(153, 153, 153));
         btnActualizarInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnActualizarInvestigador.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizarInvestigador.setText("Actualizar");
         btnActualizarInvestigador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -78,7 +85,9 @@ public class EditarInvestigador extends javax.swing.JFrame {
             }
         });
 
+        btnBuscarInvestigador.setBackground(new java.awt.Color(153, 153, 153));
         btnBuscarInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBuscarInvestigador.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarInvestigador.setText("Buscar");
         btnBuscarInvestigador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

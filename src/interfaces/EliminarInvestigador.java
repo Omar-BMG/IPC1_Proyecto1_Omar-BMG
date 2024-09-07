@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
 
 import archivo.ArchivoBinarioInvestigador;
+import java.awt.Color;
 
 /**
  *
@@ -18,6 +16,7 @@ public class EliminarInvestigador extends javax.swing.JFrame {
     public EliminarInvestigador(Administrador ventanaAdmin) {
         this.ventanaAdmin = ventanaAdmin;
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
         setLocationRelativeTo(null);
     }
 
@@ -36,16 +35,21 @@ public class EliminarInvestigador extends javax.swing.JFrame {
         btnEliminarInvestigador = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Eliminar Investigador");
 
         labelCodigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCodigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCodigo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelCodigo.setText("Código:");
 
+        btnEliminarInvestigador.setBackground(new java.awt.Color(153, 153, 153));
         btnEliminarInvestigador.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnEliminarInvestigador.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarInvestigador.setText("Eliminar");
         btnEliminarInvestigador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,11 +94,12 @@ public class EliminarInvestigador extends javax.swing.JFrame {
     private void btnEliminarInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInvestigadorActionPerformed
         //Instanciamos nuestro manejador de archivos binarios de investigadores
         ArchivoBinarioInvestigador archivo = new ArchivoBinarioInvestigador();
-        //Validamos que el campo de texto esté vacío
+        //Validamos que el campo de texto no esté vacío
         if(txtCodigoEliminarInvestigador.getText().length() != 0) {
             //Lamamos al procedimiento eliminarContenido definido en el binario y le enviamos el código ingresdo en el campo de texto
             archivo.eliminarContenido("investigadores.bin", txtCodigoEliminarInvestigador.getText());
             this.ventanaAdmin.actualizarTabla();
+            this.ventanaAdmin.eliminarContenidoComboboxInvestigador(txtCodigoEliminarInvestigador.getText());
             txtCodigoEliminarInvestigador.setText("");
         }
     }//GEN-LAST:event_btnEliminarInvestigadorActionPerformed

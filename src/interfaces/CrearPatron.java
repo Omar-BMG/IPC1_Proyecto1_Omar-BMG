@@ -1,20 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
+
+import archivo.ArchivoBinarioPatron;
+import archivo.ManejoArchivotxtPlanoPatron;
+import ipc_quimik.Patron;
+import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Omar
  */
 public class CrearPatron extends javax.swing.JFrame {
-
+    Administrador menuAdmin;
+    String filePath; //En esta variable guardaremos la ruta del archivo CSV del botón "Cargar Patrón"
     /**
      * Creates new form CrearPatron
      */
-    public CrearPatron() {
+    public CrearPatron(Administrador menuAdmin) {
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
+        this.menuAdmin = menuAdmin;
+        filePath = "";
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -35,27 +45,46 @@ public class CrearPatron extends javax.swing.JFrame {
         btnCargarPatronCrearPatron = new javax.swing.JButton();
         btnCrearPatron = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Crear Patrón");
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Crear Patrón");
 
         labelCodigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCodigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCodigo.setText("Código:");
 
         labelNombre.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelNombre.setForeground(new java.awt.Color(255, 255, 255));
         labelNombre.setText("Nombre:");
 
         labelPatron.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelPatron.setForeground(new java.awt.Color(255, 255, 255));
         labelPatron.setText("Patrón:");
 
+        btnCargarPatronCrearPatron.setBackground(new java.awt.Color(153, 153, 153));
         btnCargarPatronCrearPatron.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnCargarPatronCrearPatron.setForeground(new java.awt.Color(255, 255, 255));
         btnCargarPatronCrearPatron.setText("Cargar Patrón");
+        btnCargarPatronCrearPatron.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarPatronCrearPatronActionPerformed(evt);
+            }
+        });
 
+        btnCrearPatron.setBackground(new java.awt.Color(153, 153, 153));
         btnCrearPatron.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        btnCrearPatron.setForeground(new java.awt.Color(255, 255, 255));
         btnCrearPatron.setText("Crear");
+        btnCrearPatron.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearPatronActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,40 +141,70 @@ public class CrearPatron extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Este botón asignará la ruta del archivo donde está el patrón, en la variable "filePath"
+    private void btnCargarPatronCrearPatronActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPatronCrearPatronActionPerformed
+        //Con el "JFileChooser" le damos la orden que se abra la ventana del archivo
+        JFileChooser fileChooser = new JFileChooser();
+        int seleccion = fileChooser.showOpenDialog(this); //Con "showOpenDialog" Aparece un cuadro de diálogo de selección de archivos "cargar archivo".
+        
+        //Condición
+        if(seleccion == JFileChooser.APPROVE_OPTION) {//Comparamos las acciones almacenadas en la variable selección, y sólo si escojió un arhivo ejecuta las siguientes instrucciones:
+            filePath = fileChooser.getSelectedFile().getAbsolutePath(); //Para obtener el Path, definimos de tipo string la variable "filePath"
+        }
+    }//GEN-LAST:event_btnCargarPatronCrearPatronActionPerformed
+
+    private void btnCrearPatronActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPatronActionPerformed
+        String rutaPatron = "";
+        rutaPatron = ("Patrón_"+txtCodigoCrearPatron.getText()+".html"); //Definimos la ruta del archivo html que contiene el patrón
+        //Instanciamos nuestro manejador de archivos Binarios y con el metodo agregarContenido almacenamos el objeto de tipo Patron.
+        ArchivoBinarioPatron archivo = new ArchivoBinarioPatron();
+        //Primero Guardamos en un ArrayList los patrones en caso un archivo binario ya exista
+        ArrayList<Patron> patrones = archivo.obtenerContenido("patrones.bin");
+        //Validamos que no hayan campos de texto vacíos y que el código no exista ya
+        ManejoArchivotxtPlanoPatron archivoCSV = new ManejoArchivotxtPlanoPatron();
+        if((txtCodigoCrearPatron.getText().length() != 0) && (txtNombreCrearPatron.getText().length() != 0)) {
+            if(patrones.size()== 0) {
+                guardarNuevoPatron(archivo); //Si no hay patrones, simplemente guardamos el nuevo patron
+                archivoCSV.crearArchivo(rutaPatron);
+                archivoCSV.leerCSVpatron(filePath, rutaPatron);
+            }
+            else{ //Si existen patrones debemos recorrer el arreglo para validar que el código sea único
+                boolean codigoExiste = false;
+                for (Patron tempPatron : patrones) {
+                    if(tempPatron.getCodigo().equals(txtCodigoCrearPatron.getText())){
+                       codigoExiste = true; 
+                    }
+                }
+                if(codigoExiste) {
+                    JOptionPane.showMessageDialog(this, "El código ya existe");
+                }
+                else{
+                    guardarNuevoPatron(archivo);
+                    archivoCSV.crearArchivo(rutaPatron);
+                    archivoCSV.leerCSVpatron(filePath, rutaPatron);
+                }
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Falta información");
+        }
+    }//GEN-LAST:event_btnCrearPatronActionPerformed
+    
+    //Procedimiento que guarda el nuevo Patron en el archivo Binario recibiendo el archivo instanciado previamente
+    private void guardarNuevoPatron(ArchivoBinarioPatron archivo){
+        archivo.agregarContenido("patrones.bin", new Patron(txtCodigoCrearPatron.getText(),txtNombreCrearPatron.getText()));
+
+        //Ahora limpiamos los campos de texto:
+        txtCodigoCrearPatron.setText("");
+        txtNombreCrearPatron.setText("");
+        this.menuAdmin.actualizarTablaPatrones(); //Actualizamos la tabla de patrones en la ventana administrador 
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CrearPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CrearPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CrearPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CrearPatron.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CrearPatron().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCargarPatronCrearPatron;

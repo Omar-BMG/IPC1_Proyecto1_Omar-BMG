@@ -1,23 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package interfaces;
+
+import archivo.ArchivoBinarioAnalisisExp;
+import archivo.ArchivoBinarioAsignacionExp;
+import archivo.ArchivoBinarioInvestigador;
+import archivo.ArchivoBinarioMuestra;
+import archivo.ArchivoBinarioPatron;
+import archivo.ManejoArchivotxtPlanoPatron;
+import ipc_quimik.AlgoritmoAnalisis;
+import ipc_quimik.Analisis;
+import ipc_quimik.AsignacionExperimento;
+import ipc_quimik.Investigador;
+import ipc_quimik.Patron;
+import ipc_quimik.RenderBotonVerResultados;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
  * @author Omar
  */
 public class ventanaInvestigador extends javax.swing.JFrame {
-
+    Investigador investigador;
     /**
      * Creates new form Investigador
      */
-    public ventanaInvestigador() {
+    public ventanaInvestigador(Investigador investigador) {
         initComponents();
         setLocationRelativeTo(null);
+        this.getContentPane().setBackground(Color.BLACK);
+        this.investigador = investigador;
+        labelMostrarUsuario.setText("Investigador "+investigador.getCodigo());
+        actualizarVentanaAnalisis(); //Actualizamos los Combobox con la información necesaria.
+        actualizarTablaResultados(); //Actualizamos la pestaña resultados
     }
-
+    
+    public void actualizarTablaResultados() {
+        //Obtenemos la columna 6 de la tabla de resultados y la gurdamos en una variable de tipo TableColumn que nos permitirá modificarla
+        TableColumn columnaAcciones = tablaResultados.getColumnModel().getColumn(6);
+        columnaAcciones.setCellRenderer(new RenderBotonVerResultados()); //Implementamos un cellRender que dibujará valores en la columna de tipo "RenderBotonVerResultados".
+        columnaAcciones.setCellEditor(new RenderBotonVerResultados()); //Implementamos un editor de los valores de las celdas de la columna de tipo "RenderBotonVerResultados"
+        //El código anterior implementará el botón en la séptima columna de la tabla
+        
+        //Ahora instanciamos el archivo binario de analisis, obtenemos los analisis y los enviamos a la tabla
+        ArchivoBinarioAnalisisExp archivo = new ArchivoBinarioAnalisisExp();
+        ArrayList<Analisis> analisis = archivo.obtenerContenido("analisis.bin"); //Recibimos en un ArrayList lo leído del binario
+        
+        //Lo colocamos en la tabla
+        DefaultTableModel tablaModelo = (DefaultTableModel)tablaResultados.getModel();
+        tablaModelo.setRowCount(0); //Para evitar que se dupliquen las filas
+        for (Analisis analisisTemp : analisis){
+            if(analisisTemp.getCodigoInvestigador().equals(investigador.getCodigo())) { //Validamos que los analisis que se agregaran a la tabla pertenezcan al investigador que inicio sesión
+                tablaModelo.addRow(new Object[]{analisisTemp.getNoAnalsis(), analisisTemp.getMuestra(), analisisTemp.getPatron(), analisisTemp.getFecha(), analisisTemp.getHora(), analisisTemp.getResultado()});
+            }    
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,97 +73,124 @@ public class ventanaInvestigador extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        panelAnalisis = new javax.swing.JPanel();
+        panelAnalisis = new FondoPanelInvestigador();
         labelTitulo = new javax.swing.JLabel();
         labelMuestra = new javax.swing.JLabel();
         labelPatronAnalizar = new javax.swing.JLabel();
-        comboboxAnalisisMuestras = new javax.swing.JComboBox<>();
-        comboboxPatronAnalizar = new javax.swing.JComboBox<>();
+        comboboxAnalisisPatrones = new javax.swing.JComboBox<>();
         btnAnalizarExperimento = new javax.swing.JButton();
         LabelResultados = new javax.swing.JLabel();
         labelMostrarResultados = new javax.swing.JLabel();
-        panelResultados = new javax.swing.JPanel();
-        panelTablaResultados = new javax.swing.JPanel();
+        comboboxAnalisisMuestras = new javax.swing.JComboBox<>();
+        panelResultados = new FondoPanelInvestigador();
+        panelTablaResultados = new FondoPanelInvestigador();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaResultados = new javax.swing.JTable();
         labelMostrarUsuario = new javax.swing.JLabel();
         btnCerrarSesionInvestigador = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jTabbedPane1.setBackground(new java.awt.Color(102, 102, 102));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setFont(new java.awt.Font("Segoe UI Black", 1, 16)); // NOI18N
 
         panelAnalisis.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 36)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Análsis de Experimentos");
 
         labelMuestra.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        labelMuestra.setForeground(new java.awt.Color(255, 255, 255));
         labelMuestra.setText("Muestra");
 
         labelPatronAnalizar.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        labelPatronAnalizar.setForeground(new java.awt.Color(255, 255, 255));
         labelPatronAnalizar.setText("Patrón a analizar");
 
-        comboboxAnalisisMuestras.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxAnalisisPatrones.setBackground(new java.awt.Color(153, 153, 153));
+        comboboxAnalisisPatrones.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        comboboxAnalisisPatrones.setForeground(new java.awt.Color(255, 255, 255));
 
-        comboboxPatronAnalizar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
+        btnAnalizarExperimento.setBackground(new java.awt.Color(102, 102, 102));
         btnAnalizarExperimento.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        btnAnalizarExperimento.setForeground(new java.awt.Color(255, 255, 255));
         btnAnalizarExperimento.setText("Analizar");
+        btnAnalizarExperimento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarExperimentoActionPerformed(evt);
+            }
+        });
 
         LabelResultados.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        LabelResultados.setForeground(new java.awt.Color(255, 255, 255));
         LabelResultados.setText("Resultados:");
 
         labelMostrarResultados.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         labelMostrarResultados.setForeground(new java.awt.Color(102, 255, 0));
-        labelMostrarResultados.setText("Aquí se mostrarán los resultados ");
+
+        comboboxAnalisisMuestras.setBackground(new java.awt.Color(153, 153, 153));
+        comboboxAnalisisMuestras.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        comboboxAnalisisMuestras.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelAnalisisLayout = new javax.swing.GroupLayout(panelAnalisis);
         panelAnalisis.setLayout(panelAnalisisLayout);
         panelAnalisisLayout.setHorizontalGroup(
             panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelAnalisisLayout.createSequentialGroup()
-                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelMostrarResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelAnalisisLayout.createSequentialGroup()
-                            .addGap(77, 77, 77)
-                            .addComponent(labelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelAnalisisLayout.createSequentialGroup()
-                            .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(panelAnalisisLayout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(labelMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelAnalisisLayout.createSequentialGroup()
-                                    .addGap(34, 34, 34)
-                                    .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(LabelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(labelPatronAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGap(18, 18, 18)
-                            .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(comboboxAnalisisMuestras, 0, 337, Short.MAX_VALUE)
-                                .addComponent(comboboxPatronAnalizar, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(panelAnalisisLayout.createSequentialGroup()
-                            .addGap(193, 193, 193)
-                            .addComponent(btnAnalizarExperimento, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(comboboxAnalisisMuestras, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addGap(94, 94, 94)
+                        .addComponent(labelMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAnalisisLayout.createSequentialGroup()
+                        .addComponent(labelPatronAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59))
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addComponent(comboboxAnalisisPatrones, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41))))
+            .addGroup(panelAnalisisLayout.createSequentialGroup()
+                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addGap(264, 264, 264)
+                        .addComponent(btnAnalizarExperimento))
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(labelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(68, Short.MAX_VALUE))
+            .addGroup(panelAnalisisLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(LabelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelMostrarResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelAnalisisLayout.setVerticalGroup(
             panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelAnalisisLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addComponent(labelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(comboboxAnalisisMuestras)
-                    .addComponent(labelMuestra, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelPatronAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(comboboxPatronAnalizar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAnalizarExperimento, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(59, 59, 59)
+                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelPatronAnalizar)
+                    .addComponent(labelMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboboxAnalisisPatrones, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboboxAnalisisMuestras, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(btnAnalizarExperimento, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LabelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelMostrarResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(LabelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelMostrarResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -126,15 +198,46 @@ public class ventanaInvestigador extends javax.swing.JFrame {
 
         panelResultados.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        tablaResultados.setBackground(new java.awt.Color(102, 102, 102));
+        tablaResultados.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        tablaResultados.setForeground(new java.awt.Color(255, 255, 255));
+        tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "No.", "Muestra", "Patrón", "Fecha", "Hora", "Resultado", "Acciones"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tablaResultados);
+
         javax.swing.GroupLayout panelTablaResultadosLayout = new javax.swing.GroupLayout(panelTablaResultados);
         panelTablaResultados.setLayout(panelTablaResultadosLayout);
         panelTablaResultadosLayout.setHorizontalGroup(
             panelTablaResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 635, Short.MAX_VALUE)
+            .addGroup(panelTablaResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTablaResultadosLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         panelTablaResultadosLayout.setVerticalGroup(
             panelTablaResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 268, Short.MAX_VALUE)
+            .addGap(0, 288, Short.MAX_VALUE)
+            .addGroup(panelTablaResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaResultadosLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(16, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
@@ -150,17 +253,25 @@ public class ventanaInvestigador extends javax.swing.JFrame {
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelTablaResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panelTablaResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Resultados", panelResultados);
 
         labelMostrarUsuario.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelMostrarUsuario.setForeground(new java.awt.Color(255, 255, 255));
         labelMostrarUsuario.setText("Aqui se mostrara el usuario");
 
+        btnCerrarSesionInvestigador.setBackground(new java.awt.Color(102, 102, 102));
         btnCerrarSesionInvestigador.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnCerrarSesionInvestigador.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrarSesionInvestigador.setText("Cerrar sesión");
+        btnCerrarSesionInvestigador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionInvestigadorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -183,55 +294,215 @@ public class ventanaInvestigador extends javax.swing.JFrame {
                     .addComponent(labelMostrarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCerrarSesionInvestigador, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
-                .addGap(21, 21, 21))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ventanaInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ventanaInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ventanaInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ventanaInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+    private void btnCerrarSesionInvestigadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionInvestigadorActionPerformed
+        Login ventanaLogin = new Login();
+        ventanaLogin.setVisible(true);
+        dispose(); //Cerramos esta ventna
+    }//GEN-LAST:event_btnCerrarSesionInvestigadorActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ventanaInvestigador().setVisible(true);
+    private void btnAnalizarExperimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarExperimentoActionPerformed
+        //Guardamos el año, mes , día , hora , minuto y segundos , que nos serviran para nombrar el reporte html y para la tabla
+        //A partir de java 8 en adelante puedes usar el API LocalDateTime.
+        LocalDateTime ahora = LocalDateTime.now();
+        String ahoraAnio = Integer.toString(ahora.getYear());
+        String ahoraMes = Integer.toString(ahora.getMonthValue());
+        String ahoraDia = Integer.toString(ahora.getDayOfMonth());
+        String ahoraHora = Integer.toString(ahora.getHour());
+        String ahoraMinuto = Integer.toString(ahora.getMinute());
+        String ahoraSegundo = Integer.toString(ahora.getSecond());
+        //Instanciamos el archivo Binario de los analisis que nos servirá para hacer validaciones y al final, para almacenar el nuevo análisis.
+        ArchivoBinarioAnalisisExp archivoAnalisis = new ArchivoBinarioAnalisisExp();
+        ArchivoBinarioMuestra archivoMuestras = new ArchivoBinarioMuestra(); //Nos servirá para alterar el estado de la muestra en caso de que el analisis sea exitoso
+        ArchivoBinarioAsignacionExp archivoAsignaciones = new ArchivoBinarioAsignacionExp(); //Nos servirá para eliminar la muestra asignada al investigador en caso sea exitoso
+        ArchivoBinarioInvestigador archivoInvestigador = new ArchivoBinarioInvestigador(); //Nos servirá para incrementar la cantida de experimentos hechos por el mismo
+        //Datos que nos servirán para el constructor de la clase Analisis y otros procedimientos:
+        String fechaAnalisis = (ahoraDia+"/"+ahoraMes+"/"+ahoraAnio); //Para almacenar en la clase asignación que será serializada
+        String horaAnalisis = (ahoraHora+":"+ahoraMinuto); //Para almacenar en la clase asignación que será serializada
+        int numeroAnalisis = obtenerNumeroAnalisis(archivoAnalisis); //Obtenemos el número de análisis correspondiente llamando a la función que nos devolverá el entero
+        
+        //AREGLAR, CONVERTIR A STRING LOS DATOS CON LOS QUE SE GUARDA EL REPORTE
+        
+        //Guardamos las selecciones de los combobox, las obtendremos de tipo "Objeto" por lo que debemos castear a String
+        String codigoMuestraSelect = (String)comboboxAnalisisMuestras.getSelectedItem();
+        String codigoPatronSelect = (String)comboboxAnalisisPatrones.getSelectedItem();
+        
+        //Definimos las rutas donde se encuentran los archivos de las matrices de las muestras y patrones
+        String rutaMatrizMuestra = ("Muestra_"+codigoMuestraSelect+".html");
+        String rutaMatrizPatron = ("Patrón_"+codigoPatronSelect+".html");
+        
+        //Instanciamos un manejador de archivo de texto plano para obtener la matriz de la muestra y del patron correspondiente y almacenarlos en un arreglo de dos dimensiones
+        ManejoArchivotxtPlanoPatron archivoMatrices = new ManejoArchivotxtPlanoPatron();
+        int [][] matrizMuestra = archivoMatrices.obtenerMatriz(rutaMatrizMuestra); //Guardamos la matriz de la muestra correspondiente
+        int [][] matrizPatron = archivoMatrices.obtenerMatriz(rutaMatrizPatron); //Guardamos la matriz del patrón correspondiente
+        int filasColumnasMatrizMuestra = archivoMatrices.obtenerLongitudMatrizReal(rutaMatrizMuestra); //Guardamos el tamaño de filas y coloumnas de la matriz Muestra.
+        int filasColumnasMatrizPatron = archivoMatrices.obtenerLongitudMatrizReal(rutaMatrizPatron); //Guradamos el tamaño de filas y columnas de la matriz Patron.
+        //Obtenemos de la clase manejo de archivos de texto plano, el método crear nuevo archivo para crear el reporte html donde se registrará el procedimiento del experimento.
+        String rutaReporteAnalisis = (ahoraDia+ahoraMes+ahoraAnio+"-"+ahoraHora+ahoraMinuto+ahoraSegundo+"_"+numeroAnalisis+".html"); //La ruta del reporte html es: DDMMAAAA-HHmmss_codigoanalisis.html
+        archivoMatrices.crearArchivo(rutaReporteAnalisis);
+        
+        //-------------INICIO DEL ALGORITMO DE ANALISIS DEL EXPERIMENTO------------
+        AlgoritmoAnalisis algoritmo = new AlgoritmoAnalisis(); //Instanciamos la clase que cotneiene los precesos a realizar
+        int [][] matrizTemporal1 = algoritmo.ObtenerMatrizTemp1(matrizMuestra, filasColumnasMatrizMuestra); //Le envíamos la matriz Muestra y el número de filas y columnas de la misma.
+        int [][] matrizTemporal2 = algoritmo.ObtenerMatrizTemp2(matrizMuestra, filasColumnasMatrizMuestra); //Obtenemos la matriz temporal 2
+        int [][] matrizTemporal3 = algoritmo.ObtenerMatrizTemp3(matrizTemporal1, matrizTemporal2, filasColumnasMatrizMuestra); //Obtenemos la matriz temporal 3
+        int [][] matrizResultante = algoritmo.ObtenerMatrizResultante(matrizTemporal3, filasColumnasMatrizMuestra); //Obtenemos la matriz resultante
+        boolean compararMatrices = algoritmo.CompararMatrices(matrizResultante, matrizPatron, filasColumnasMatrizMuestra, filasColumnasMatrizPatron);
+        String resultadoAnalisis = ""; //Variable donde guardaremos "Exitoso" o "Fallido".
+        //Ya hemos obtenido la matriz temp 1, 2, 3, la resultante y el resultado de comparar las matrices.
+        
+        //--------Empezamos a cargar el procedimiento al reporte .html----------
+        String titulo = ("REPORTE DEL ANÁLISIS DEL EXPERIMENTO ENTRE LA MUESTRA: "+codigoMuestraSelect+"; Y EL PATRÓN: "+codigoPatronSelect);
+        archivoMatrices.agregarContenidoReporte(titulo, rutaReporteAnalisis); //Hemos añadido un título al reporte.
+        String lineaTexto = "El patron de la muestra "+codigoMuestraSelect+" es:";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis); //añadimos la linea de texto anterior
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizMuestra, filasColumnasMatrizMuestra); //Cargamos la matriz muestra al reporte
+        lineaTexto = "Este patrón de la muestra se multiplica por 3 y obtenemos la matriz Temporal 1: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizTemporal1, filasColumnasMatrizMuestra); //Cargamos la matriz Temporal 1 al reporte.
+        lineaTexto = "Ahora, el patrón de la muestra se multiplica por 7 y obtenemos la matriz Temporal 2: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizTemporal2, filasColumnasMatrizMuestra); //Cargamos la matriz Temporal 2 al reporte.
+        lineaTexto = "A continuación, la matriz temporal 1 y 2 se multiplican y obtenemos la siguiente matriz temporal 3: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizTemporal3, filasColumnasMatrizMuestra); //Cargamos la matriz Temporl 3 al reporte.
+        lineaTexto = "Luego, aplicamos división modular de 2 con cada uno de los valores de la matriz temporal 3. Obtenemos la matriz resultante: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizResultante, filasColumnasMatrizMuestra); //Cargamos la matriz resultante al archivo html.
+        lineaTexto = "La matriz resultante anterior se compara con la matriz patron, la cual es: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        cargarMatrizAlReporte(archivoMatrices, rutaReporteAnalisis, matrizPatron, filasColumnasMatrizPatron); //Cargamos la matriz patron al reporte
+        lineaTexto = "Finalmente, luego de comparar las matrices se obtiene el resultado: ";
+        archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis);
+        if (compararMatrices) { //Si la comparación de las matrices retorna verdader, es decir, que son iguales, ejecuta
+            lineaTexto = ("La muestra indica que los resultados coinciden con: "+codigoPatronSelect);
+            resultadoAnalisis = "Exitoso"; //Lo enviaremos al contructor del nuevo analisis
+            archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis); //Añadimos el resultado final al reporte
+            labelMostrarResultados.setText("La muestra indica "+codigoPatronSelect); //Mostramos en el label de la ventana los resultados.
+            labelMostrarResultados.setForeground(Color.green);
+            
+            //Guardamos la nueva asignación en el binario correspondiente
+            archivoAnalisis.agregarContenido("analisis.bin", new Analisis(numeroAnalisis, investigador.getCodigo(), codigoMuestraSelect, codigoPatronSelect, fechaAnalisis, horaAnalisis, resultadoAnalisis, rutaReporteAnalisis));
+            
+            //Ahora usamos el archivo Binario de las muestras para modificar el estado de la muestra usada
+            archivoMuestras.modificarEstadoMuestra("muestras.bin", codigoMuestraSelect , "Procesado");
+            archivoAsignaciones.eliminarContenido("asignaciones.bin", codigoMuestraSelect); //Eliminamos la muestra asignada al investigador
+            archivoInvestigador.modificarCantidadExp("investigadores.bin", investigador.getCodigo()); //Aumentamos en 1 la cantidad de experimentos hechos por el investigador
+            actualizarVentanaAnalisis(); //Actualizamos los combobox
+            actualizarTablaResultados(); //Actualizamos la tabla resultados
+            
+        } else {
+            lineaTexto = ("La muestra indica que los resultados NO COINCIDEN con: "+codigoPatronSelect);
+            archivoMatrices.agregarContenidoReporte(lineaTexto, rutaReporteAnalisis); //Añadimos el resultado final al reporte
+            labelMostrarResultados.setText("La muestra indica FALLO"); //Mostramos en el label de la ventana los resultados.
+            labelMostrarResultados.setForeground(Color.red);
+            
+            resultadoAnalisis = "Fallo"; //Lo enviaremos al contructor del nuevo analisis
+             //Guardamos la nueva asignación en el binario correspondiente
+            archivoAnalisis.agregarContenido("analisis.bin", new Analisis(numeroAnalisis, investigador.getCodigo(), codigoMuestraSelect, codigoPatronSelect, fechaAnalisis, horaAnalisis, resultadoAnalisis, rutaReporteAnalisis));
+            archivoInvestigador.modificarCantidadExp("investigadores.bin", investigador.getCodigo()); //Aumentamos en 1 la cantidad de experimentos hechos por el investigador
+            actualizarVentanaAnalisis(); //Actualizamos los combobox
+            actualizarTablaResultados(); //Actualizamos la tabla resultados
+        }
+        
+    }//GEN-LAST:event_btnAnalizarExperimentoActionPerformed
+    
+    //Este procedimiento cargará la matriz deseada al reporte .html
+    private void cargarMatrizAlReporte(ManejoArchivotxtPlanoPatron archivoMatrices, String rutaReporteAnalisis, int [][] matrizInt, int N) {
+        //Antes que nada, convertimos la matriz recibida de tipo int a String
+        String[][] matrizString = new String [N][N]; //Matriz donde se guardaran los datos
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                matrizString[i][j] = String.valueOf(matrizInt[i][j]);
             }
-        });
+        }
+        //Ciclo for para crear la tabla en html y agregar los valores de la matriz tipo String
+        String linea = ""; //Variable que servirá par ir agregando contenido al reporte .html
+        linea = "<table border = \"1\">";
+        for (int i = 0; i < N; i++) {
+            linea = linea+"<tr>";
+            for (int j = 0; j < N; j++) {
+                linea = linea+"<td>"+matrizString[i][j]+"</td>";
+            }
+            linea = linea+"</tr>";
+        }
+        linea = linea+"</table><br>";
+        
+        archivoMatrices.agregarMatrizReporte(linea, rutaReporteAnalisis); //Por último enviamos lo guardado en linea para que lo escriba en el archivo html en la dirección indicada.
+        
     }
+    
+    
+    //Esta función nos devolverá el número de análisis que estamos realizando con respecto a los análisis guardados ya en el archivo binario.
+    private int obtenerNumeroAnalisis(ArchivoBinarioAnalisisExp archivoAnalisis) {
+        int numAnalisis = 0; //En esta variable se guardará el número de análisis correspondiente con respecto a todos los que se han realizado
+        //Obtenemos la lista de analisis almacenados 
+        ArrayList<Analisis> listaAnalisisActuales = archivoAnalisis.obtenerContenido("analisis.bin");
+        //Asignamos:
+        numAnalisis = listaAnalisisActuales.size()+1; //Obtenemos la cantidad de anális ya realizados, el número del nuevo análsis será la cantidad de los que ya existen más uno.
+        return numAnalisis; 
+    }
+    
+    public void actualizarVentanaAnalisis() {
+        //Intanciamos los archivos binarios de la asignacion de experimentos y los patrones y los guardamos en ArrayLists las listas de ambos
+        ArchivoBinarioAsignacionExp archivoAsignaciones = new ArchivoBinarioAsignacionExp();
+        
+        
+        ArrayList<AsignacionExperimento> listaAsignaciones = archivoAsignaciones.obtenerContenido("asignaciones.bin");
+        ArrayList<String> listaMuestras = new ArrayList<>(); //Creamos un ArrayList en el cual guardaremos los códigos de las muestras asignadas al investigador
+        ArchivoBinarioPatron archivoPatron = new ArchivoBinarioPatron();
+        ArrayList<Patron> listaPatrones = archivoPatron.obtenerContenido("patrones.bin");
+        
+        //Recorremos el ArrayList de patrones actuales y los añadimos en el combobox correspondiente
+        for(Patron tempPatrones: listaPatrones) {
+            if (validarContenidoComboboxPatrones(tempPatrones.getCodigo())) { //Sólo en caso el código no exista ya en el combobox lo agregará
+                comboboxAnalisisPatrones.addItem(tempPatrones.getCodigo());
+            }
+        }
+        
+        //Recorremos el ArrayList de asignaciones actuales y guardamos en un ArrayList las muestras asignadas al investigador
+        for (AsignacionExperimento tempAsignacion : listaAsignaciones){
+            if (tempAsignacion.getCodigoInvestigadorAsignado().equals(investigador.getCodigo())) { //Si el código de la muestra no existe ya en el combobox y si codigo del investigador que inició sesión corresponde con el código de alguna asignación, ejecuta lo siguiente
+                listaMuestras.add(tempAsignacion.getCodigoMuestraAsignada()); //Almacenamos en este ArrayList todas las muestras asignadas con el mismo código de investigador que el investigador que inició sesión.
+            }
+        }
+        
+        //Vaciamos el combobox de Muestras para llenarlo en el ciclo for con los datos actualizados
+        comboboxAnalisisMuestras.removeAllItems();
+        //Ahora recorremos el ArrayList donde estan todas las muestras asignadas al investigador correspondiente.
+        for (int i = 0; i < listaMuestras.size(); i++) {
+            String codigoMuestra = listaMuestras.get(i);
+            comboboxAnalisisMuestras.addItem(codigoMuestra); //Añadimos cada código almacenado en el arreglo al combobox
+        }
+    }
+    
+    public boolean validarContenidoComboboxPatrones(String codigo) {
+        boolean respuesta = true;
+        for (int i = 0; i < comboboxAnalisisPatrones.getItemCount(); i++) {
+            if (codigo.equals(comboboxAnalisisPatrones.getItemAt(i))) {
+                respuesta = false;
+            }
+        }
+        return respuesta;
+    }
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LabelResultados;
     private javax.swing.JButton btnAnalizarExperimento;
     private javax.swing.JButton btnCerrarSesionInvestigador;
     private javax.swing.JComboBox<String> comboboxAnalisisMuestras;
-    private javax.swing.JComboBox<String> comboboxPatronAnalizar;
+    private javax.swing.JComboBox<String> comboboxAnalisisPatrones;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelMostrarResultados;
     private javax.swing.JLabel labelMostrarUsuario;
@@ -241,5 +512,23 @@ public class ventanaInvestigador extends javax.swing.JFrame {
     private javax.swing.JPanel panelAnalisis;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JPanel panelTablaResultados;
+    private javax.swing.JTable tablaResultados;
     // End of variables declaration//GEN-END:variables
+
+    
+    class FondoPanelInvestigador extends JPanel {
+        private Image imagen;
+        
+        @Override
+        public void paint(Graphics g) {
+            imagen = new ImageIcon(getClass().getResource("/imagenes/fondoPanelInvestigador.png")).getImage();
+            
+            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this); //Dibujamos la imagen
+            
+            setOpaque(false); //Evita que dibuje el fondo por defecto que tiene el panel
+            super.paint(g); //Dibuja los componentes por encima de la imagen para que no se pierdan
+        }
+    }
+    
+
 }

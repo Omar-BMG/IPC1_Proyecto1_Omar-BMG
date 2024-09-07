@@ -100,7 +100,29 @@ public class ArchivoBinarioInvestigador {
         } catch (Exception e) {
             System.out.println("Error al agregar contenido: "+e.getMessage());
         }
-        
     }
     
-}
+    public void modificarCantidadExp (String ruta_archivo, String codigo){
+        try {
+           //Obtenemos el listado de investidadores del archivo binario existente
+           List<Investigador> listado_investigadores = this.obtenerContenido(ruta_archivo);
+           //Para filtrar la modificación a realizar, recorremos con un For y comparamos el codigo recibido por parámetro
+           for (Investigador tempInvest : listado_investigadores) {
+               if(tempInvest.getCodigo().equals(codigo)) {
+                   tempInvest.setExperimentos(tempInvest.getExperimentos()+1); //Añadimos la cantidad de experimentos que ya tenía más uno
+               }
+           }
+           //Luego de haber modificado la lista con el ciclo for, a continuación realiza la sobrescritura en el binario
+           
+           FileOutputStream salidaArchivo = new FileOutputStream(ruta_archivo);
+           ObjectOutputStream salidaObjeto = new ObjectOutputStream(salidaArchivo);
+           salidaObjeto.writeObject(listado_investigadores);
+           salidaArchivo.close();
+           salidaObjeto.close();
+            
+        } catch (Exception e) {
+            System.out.println("Error al agregar contenido: "+e.getMessage());
+        }
+    }
+        
+} 

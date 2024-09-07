@@ -53,4 +53,26 @@ public class ArchivoBinarioMuestra {
         return listaMuestrasActual;
     }
     
+    public void modificarEstadoMuestra (String ruta_archivo, String codigo, String nuevoEstado){
+        try {
+           //Obtenemos el listado de investidadores del archivo binario existente
+           List<Muestra> listado_muestras = this.obtenerContenido(ruta_archivo);
+           //Para filtrar la modificación a realizar, recorremos con un For y comparamos el codigo recibido por parámetro
+           for (Muestra tempMuestra : listado_muestras) {
+               if(tempMuestra.getCodigo().equals(codigo)) {
+                   tempMuestra.setEstado(nuevoEstado);
+               }
+           }
+           //Luego de haber modificado la lista con el ciclo for, a continuación realiza la sobrescritura en el binario
+           
+           FileOutputStream salidaArchivo = new FileOutputStream(ruta_archivo);
+           ObjectOutputStream salidaObjeto = new ObjectOutputStream(salidaArchivo);
+           salidaObjeto.writeObject(listado_muestras);
+           salidaArchivo.close();
+           salidaObjeto.close();
+            
+        } catch (Exception e) {
+            System.out.println("Error al agregar contenido: "+e.getMessage());
+        }
+    }
 }

@@ -3,6 +3,7 @@ package interfaces;
 
 import archivo.ArchivoBinarioInvestigador;
 import ipc_quimik.Investigador;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -17,14 +18,12 @@ public class CrearInvestigador extends javax.swing.JFrame {
     /**
      * Creates new form CrearInvestigador
      */
-    public CrearInvestigador() {
-        initComponents();
-        setLocationRelativeTo(null);
-    }
+    
 
     public CrearInvestigador(Administrador ventanaAdmin){
         this.ventanaAdmin = ventanaAdmin; //Inicializamos la ventana administrador 
         initComponents();
+        this.getContentPane().setBackground(Color.BLACK);
         setLocationRelativeTo(null);
         
     }
@@ -50,28 +49,36 @@ public class CrearInvestigador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Crear Investigador");
+        setResizable(false);
 
         labelTitulo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        labelTitulo.setForeground(new java.awt.Color(255, 255, 255));
         labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitulo.setText("Crear Investigador");
 
         labelCódigo.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelCódigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCódigo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelCódigo.setText("Código:");
 
         labelNombre.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelNombre.setForeground(new java.awt.Color(255, 255, 255));
         labelNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelNombre.setText("Nombre:");
 
         labelGenero.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelGenero.setForeground(new java.awt.Color(255, 255, 255));
         labelGenero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelGenero.setText("Género:");
 
         labelContrasena.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        labelContrasena.setForeground(new java.awt.Color(255, 255, 255));
         labelContrasena.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelContrasena.setText("Contraseña:");
 
+        btnCrearInvestigador.setBackground(new java.awt.Color(153, 153, 153));
         btnCrearInvestigador.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnCrearInvestigador.setForeground(new java.awt.Color(255, 255, 255));
         btnCrearInvestigador.setText("Crear");
         btnCrearInvestigador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,37 +196,7 @@ public class CrearInvestigador extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CrearInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CrearInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CrearInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CrearInvestigador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CrearInvestigador().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearInvestigador;
@@ -233,4 +210,7 @@ public class CrearInvestigador extends javax.swing.JFrame {
     private javax.swing.JTextField txtGenero;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
+
+    
+    
 }
